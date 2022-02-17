@@ -4,28 +4,45 @@ import java.util.Random;
 
 public class RabinMiller {
 
-    public boolean calculate(BigInteger n, BigInteger iterations){
-        Random rand = new Random();
-        BigInteger a = new BigInteger(String.valueOf(rand.nextInt(n.intValue()-2) + 2));
-        //long x = computeModulo(a, n-1, n);
-        BigInteger x = a.modPow(n.subtract(new BigInteger("2")), n);
+    private static final BigInteger ZERO = new BigInteger("0");
+    private static final BigInteger ONE = new BigInteger("1");
+    private static final BigInteger TWO = new BigInteger("2");
+    private static final BigInteger THREE = new BigInteger("3");
+    private static final BigInteger FOUR = new BigInteger("4");
 
-        if (x.intValue()==1 || x.intValue() == n.intValue()-1) {
-            return true;
+
+    public boolean calculate(BigInteger n, int iterations){
+        Random rand = new Random();
+        BigInteger s = n.subtract(ONE);
+        int r = 0;
+        while (s.mod(TWO).equals(BigInteger.ZERO)) {
+            s = s.divide(TWO);
+            r++;
         }
-        for(int j = 1; j <= iterations.intValue()-1; j++){
-            //x = computeModulo(a, computePow(2, j)*(n-1), n);
-            //x = computePow(a, computePow(2,j)*(n-1)) % n;
-            x = a.modPow(new BigInteger("2").pow(j), n.subtract(new BigInteger("1")));
-            if(x.intValue() == 1){
-                return false;
+
+        rabinMiller: for(int i = 0; i < iterations; i++){
+            //Generates a random integer in the range [2, n-2]
+            BigInteger a;
+            do {
+                a = new BigInteger(n.bitLength(), rand);
+            } while (a.compareTo(TWO) < 0 && a.compareTo(n.subtract(TWO)) > 0);
+
+            BigInteger x = a.modPow(s, n);
+            if(x.equals(ONE) || x.equals(n.subtract(ONE))){
+                continue;
             }
-            if(x.intValue() == n.intValue()-1){
-                return true;
+            for(int j = 1; j < r; j++){
+                x = a.modPow(TWO.pow(j).multiply(s), n);
+                if(x.equals(ONE)){
+                    return false;
+                }
+                if(x.equals(n.subtract(ONE))){
+                    continue rabinMiller;
+                }
             }
+            return false;
         }
-        return false;
-        BigInteger.probablePrime()
+        return true;
     }
     /*
     public long computeModulo(long base, long exp, long mod){
