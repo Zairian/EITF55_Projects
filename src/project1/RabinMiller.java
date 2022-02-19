@@ -1,17 +1,60 @@
 package project1;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Random;
+import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class RabinMiller {
 
-    private static final BigInteger ZERO = new BigInteger("0");
     private static final BigInteger ONE = new BigInteger("1");
     private static final BigInteger TWO = new BigInteger("2");
-    private static final BigInteger THREE = new BigInteger("3");
-    private static final BigInteger FOUR = new BigInteger("4");
 
+    public void generate100Primes(Scanner s){
+        System.out.println("Enter bitsize: ");
+        int bitSize = s.nextInt();
+        s.close();
 
-    public boolean calculate(BigInteger n, int iterations){
+        generatePrimes(100, bitSize);
+    }
+
+    public void generateTwoPrimes(Scanner s){
+        System.out.println("Enter bitsize: ");
+        int bitSize = s.nextInt();
+        s.close();
+
+        ArrayList<BigInteger> primes = generatePrimes(2, bitSize);
+        System.out.println("Generated primes: \n" +
+                "1: " + primes.get(0) +"\n" +
+                "2: " + primes.get(1));
+    }
+
+    private ArrayList<BigInteger> generatePrimes(int primesAmount, int bitSize){
+        int iterations = 20;
+
+        Random rand = new Random();
+        ArrayList<BigInteger> primes = new ArrayList<>();
+
+        long timeStart = System.nanoTime();
+        while(primes.size() < primesAmount){
+            BigInteger testPrime = new BigInteger(bitSize, rand);
+            if(testPrime.mod(TWO).equals(BigInteger.valueOf(0))){ //Check if number is even
+                continue;
+            }
+            if(calculate(testPrime, iterations)){
+                primes.add(testPrime);
+            }
+        }
+
+        long timeEnd = System.nanoTime();
+        System.out.println("Primes generated: " + primes.size() + " primes of bitsize " + bitSize);
+        System.out.println("Time Elapsed: " + TimeUnit.NANOSECONDS.toSeconds((timeEnd-timeStart)) + "s");
+        System.out.println("Average calculation time of 1 prime: " + TimeUnit.NANOSECONDS.toMillis((timeEnd-timeStart)/primesAmount) + "ms");
+
+        return primes;
+    }
+
+    private boolean calculate(BigInteger n, int iterations){
         Random rand = new Random();
         BigInteger s = n.subtract(ONE);
         int r = 0;
@@ -44,38 +87,4 @@ public class RabinMiller {
         }
         return true;
     }
-    /*
-    public long computeModulo(long base, long exp, long mod){
-
-        if(base == 0){
-            return 0;
-        }
-        long res = 1;
-        long y = base;
-        long x = exp;
-        while(x > 0){
-            if(x % 2 != 0){
-                res = (res*y) % mod;
-            }
-            y = (y*y) % mod;
-            x = x/2;
-        }
-        return res;
-    }*/
-
-    /*public long computePow(long base, long exp){
-        if(base == 0){
-            return 0;
-        }
-        long y = base;
-        long x = exp;
-        long result = 1;
-
-        while(x > 0){
-            result *= y;
-            x--;
-        }
-        return result;
-    }*/
-
 }
