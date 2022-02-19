@@ -3,6 +3,7 @@ package project1;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class Testington {
     private static final BigInteger TWO = new BigInteger("2");
@@ -26,12 +27,9 @@ public class Testington {
             }
         }
         long timeEnd = System.nanoTime();
-        System.out.println("Time Elapsed: " + (timeEnd-timeStart));
-        System.out.println("Average calculation time of 1 prime: " + (timeEnd-timeStart)/amountPrimesToGenerate);
+        System.out.println("Time Elapsed: " + TimeUnit.NANOSECONDS.toSeconds((timeEnd-timeStart)) + "s");
+        System.out.println("Average calculation time of 1 prime: " + TimeUnit.NANOSECONDS.toMillis((timeEnd-timeStart)/amountPrimesToGenerate) + "ms");
 
-        for(int i = 0; i < primes.size(); i++){
-            //System.out.println(primes.get(i));
-        }
         System.out.println("Primes generated: " + primes.size());
     }
 }
