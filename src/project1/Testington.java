@@ -26,7 +26,8 @@ public class Testington {
             }
         }
         long timeEnd = System.nanoTime();
-        System.out.println("Time Elapsed: " + (timeEnd-timeStart)/amountPrimesToGenerate);
+        System.out.println("Time Elapsed: " + (timeEnd-timeStart));
+        System.out.println("Average calculation time of 1 prime: " + (timeEnd-timeStart)/amountPrimesToGenerate);
 
         for(int i = 0; i < primes.size(); i++){
             //System.out.println(primes.get(i));
