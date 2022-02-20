@@ -13,20 +13,20 @@ public class RabinMiller {
     public void generate100Primes(Scanner s){
         System.out.println("Enter bitsize: ");
         int bitSize = s.nextInt();
-        s.close();
 
         generatePrimes(100, bitSize);
     }
 
-    public void generateTwoPrimes(Scanner s){
+    public ArrayList<BigInteger> generateTwoPrimes(Scanner s){
         System.out.println("Enter bitsize: ");
         int bitSize = s.nextInt();
-        s.close();
 
         ArrayList<BigInteger> primes = generatePrimes(2, bitSize);
         System.out.println("Generated primes: \n" +
                 "1: " + primes.get(0) +"\n" +
                 "2: " + primes.get(1));
+
+        return primes;
     }
 
     private ArrayList<BigInteger> generatePrimes(int primesAmount, int bitSize){
@@ -68,7 +68,7 @@ public class RabinMiller {
             BigInteger a;
             do {
                 a = new BigInteger(n.bitLength(), rand);
-            } while (a.compareTo(TWO) < 0 && a.compareTo(n.subtract(TWO)) > 0);
+            } while (a.compareTo(TWO) < 0 || a.compareTo(n.subtract(TWO)) > 0);
 
             BigInteger x = a.modPow(s, n);
             if(x.equals(ONE) || x.equals(n.subtract(ONE))){
